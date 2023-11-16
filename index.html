@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Random User Info</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      padding: 0;
+      text-align: center;
+      background-color: #f0f0f0;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    #userContainer {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-around;
+      margin-top: 10px;
+    }
+
+    .userCard {
+      width: 200px;
+      padding: 10px;
+      margin: 10px;
+      background-color: #fff;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      border-radius: 5px;
+    }
+
+    img {
+      max-width: 100%;
+      border-radius: 50%;
+    }
+
+    #successMessage {
+      margin-top: 20px;
+      font-size: 25px;
+    }
+  </style>
+</head>
+<body>
+
+  <button onclick="fetchUserData()">Download</button>
+  <div id="successMessage"></div>
+
+
+  <div id="userContainer"></div>
+
+  <script>
+    function fetchUserData() {
+      fetch('https://randomuser.me/api/?results=5')
+        .then(response => response.json())
+        .then(data => {
+          const userContainer = document.getElementById('userContainer');
+          const successMessage = document.getElementById('successMessage');
+
+          userContainer.innerHTML = '';
+
+          data.results.forEach(user => {
+            const userInfoString = `
+              <div class="userCard">
+                <img src="${user.picture.large}" alt="User Picture">
+                <p><strong>Name:</strong> ${user.name.first} ${user.name.last}</p>
+                <p><strong>City:</strong> ${user.location.city}</p>
+                <p><strong>Postcode:</strong> ${user.location.postcode}</p>
+                <p><strong>Phone:</strong> ${user.phone}</p>
+              </div>
+            `;
+
+            userContainer.innerHTML += userInfoString;
+          });
+
+          successMessage.textContent = 'SUCCESS!';
+        })
+        .catch(error => {
+          console.error('Error fetching user data:', error);
+        });
+    }
+  </script>
+
+</body>
+</html>
